@@ -43,6 +43,8 @@ func NewCandidate(client store.Store, key, node string, ttl time.Duration) *Cand
 
 // IsLeader returns true if the candidate is currently a leader.
 func (c *Candidate) IsLeader() bool {
+	c.lock.Lock()
+	defer c.lock.Unlock()
 	return c.leader
 }
 
