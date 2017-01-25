@@ -25,7 +25,7 @@ for isElected := range electedCh {
 	if isElected {
 		// We won the election - we are now the leader.
 		// Let's do leader stuff, for example, sleep for a while.
-		log.Printf("I won the election! I'm now the leader")
+		log.Println("I won the election! I'm now the leader")
 		time.Sleep(10 * time.Second)
 
 		// Tired of being a leader? You can resign anytime.
@@ -37,7 +37,7 @@ for isElected := range electedCh {
 		// this event can get triggered if someone else steals the
 		// leadership or if we resign.
 
-		log.Printf("Lost the election, let's try another time")
+		log.Println("Lost the election, let's try another time")
 	}
 }
 ```
