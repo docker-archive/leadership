@@ -29,7 +29,7 @@ for isElected := range electedCh {
 		time.Sleep(10 * time.Second)
 
 		// Tired of being a leader? You can resign anytime.
-		candidate.Resign()
+		underwood.Resign()
 	} else {
 		// We lost the election but are still running for leadership.
 		// `elected == false` is the default state and is the first event
