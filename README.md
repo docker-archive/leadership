@@ -15,7 +15,7 @@ if err != nil {
 	panic(err)
 }
 
-underwood := leadership.NewCandidate(client, "service/swarm/leader", "underwood", 15*time.Second)
+underwood := leadership.NewCandidate(client, "service/swarm/leader", "underwood", 20*time.Second)
 electedCh, _ := underwood.RunForElection()
 
 for isElected := range electedCh {
