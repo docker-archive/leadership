@@ -57,9 +57,9 @@ func (f *Follower) follow() {
 	}
 
 	f.leader = ""
-	for kv := range ch {
-		if kv == nil {
-			continue
+	for kv, ok := range ch {
+		if  !ok {
+			break
 		}
 		curr := string(kv.Value)
 		if curr == f.leader {
