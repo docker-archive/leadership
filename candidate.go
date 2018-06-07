@@ -23,6 +23,7 @@ type Candidate struct {
 	leader    bool
 	stopCh    chan struct{}
 	stopRenew chan struct{}
+	stopWait  chan struct{}
 	resignCh  chan bool
 	errCh     chan error
 }
@@ -38,6 +39,7 @@ func NewCandidate(client store.Store, key, node string, ttl time.Duration) *Cand
 		lockTTL:  ttl,
 		resignCh: make(chan bool),
 		stopCh:   make(chan struct{}),
+		stopWait: make(chan struct{}),
 	}
 }
 
@@ -64,6 +66,8 @@ func (c *Candidate) RunForElection() (<-chan bool, <-chan error) {
 // Stop running for election.
 func (c *Candidate) Stop() {
 	close(c.stopCh)
+	// Wait for the stop functions to run
+	<-c.stopWait
 }
 
 // Resign forces the candidate to step-down and try again.
@@ -142,6 +146,8 @@ func (c *Candidate) campaign() {
 			if c.leader {
 				lock.Unlock()
 			}
+			// Inform the caller that we've finished
+			c.stopWait <- struct{}{}
 			return
 		case <-lostCh:
 			// We lost the lock. Someone else is the leader, try again.
