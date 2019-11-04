@@ -123,9 +123,16 @@ func (c *Candidate) campaign() {
 			return
 		}
 
-		lostCh, err := lock.Lock(nil)
+		lostCh, err := lock.Lock(c.stopCh)
 		if err != nil {
-			c.errCh <- err
+			notStopped := true
+			select {
+			case _, notStopped = <-c.stopCh:
+			default:
+			}
+			if notStopped {
+				c.errCh <- err
+			}
 			return
 		}
 
